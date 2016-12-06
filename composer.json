@@ -1,0 +1,17 @@
+{
+  "name": "pantaovay/sns",
+  "homepage": "https://github.com/pantaovay/sns",
+  "license": "MIT",
+  "description": "SNS SDK",
+  "authors": [
+    {
+      "name": "Tao Pan",
+      "homepage": "https://github.com/pantaovay"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "SNS\\": "src/"
+    }
+  }
+}
