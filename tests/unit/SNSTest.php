@@ -279,7 +279,7 @@ class SNSTest extends \Codeception\Test\Unit
         $this->tester->assertEquals('https', $request->getUri()->getScheme());
         $this->tester->assertEquals('api.weibo.com', $request->getUri()->getHost());
         $this->tester->assertEquals('/oauth2/access_token', $request->getUri()->getPath());
-        $this->tester->assertEquals('', $request->getUri()->getQuery());
+        $this->tester->assertEquals('client_id=CLIENT_ID&client_secret=CLIENT_SECRET&grant_type=authorization_code&code=CODE&redirect_uri=REDIRECT_URI', (string) $request->getBody());
 
         $this->tester->assertEquals(false, $sns->getAccessTokenFromWeibo('CLIENT_ID', 'CLIENT_SECRET', 'CODE', 'REDIRECT_URI'));
         $this->tester->assertEquals(false, $sns->getAccessTokenFromWeibo('CLIENT_ID', 'CLIENT_SECRET', 'CODE', 'REDIRECT_URI'));
