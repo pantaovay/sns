@@ -57,6 +57,10 @@ class SNSTest extends \Codeception\Test\Unit
 
         $this->tester->assertEquals(false, $sns->getAccessTokenFromWeixin('APP_ID', 'APP_SECRET', 'CODE'));
         $this->tester->assertEquals(false, $sns->getAccessTokenFromWeixin('APP_ID', 'APP_SECRET', 'CODE'));
+
+        $mockHttpClient->addException(new Http\Client\Exception\HttpException('test', $request, new \GuzzleHttp\Psr7\Response()));
+
+        $this->tester->assertEquals(false, $sns->getAccessTokenFromWeixin('APP_ID', 'APP_SECRET', 'CODE'));
     }
 
     public function testGetUserInfoFromWeixin()

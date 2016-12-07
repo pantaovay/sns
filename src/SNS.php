@@ -31,7 +31,11 @@ class SNS
             'GET',
             $this->buildQuery(Weixin::getAccessTokenUri(), Weixin::getAccessTokenParams($appId, $appSecret, $code))
         );
-        $response = $this->httpClient->sendRequest($request);
+        try {
+            $response = $this->httpClient->sendRequest($request);
+        } catch (\Exception $e) {
+            return false;
+        }
 
         $tokenInfo = json_decode($response->getBody(), true);
         if (!is_array($tokenInfo) || isset($tokenInfo['errcode']) || !isset($tokenInfo['access_token'])) {
@@ -47,7 +51,11 @@ class SNS
             'GET',
             $this->buildQuery(Weixin::getUserInfoUri(), Weixin::getUserInfoParams($accessToken, $openId))
         );
-        $response = $this->httpClient->sendRequest($request);
+        try {
+            $response = $this->httpClient->sendRequest($request);
+        } catch (\Exception $e) {
+            return false;
+        }
 
         $userInfo = json_decode($response->getBody(), true);
         if (!is_array($userInfo)
@@ -66,7 +74,11 @@ class SNS
             'GET',
             $this->buildQuery(QQ::getAccessTokenUri(), QQ::getAccessTokenParams($appId, $appSecret, $code, $redirectUrl))
         );
-        $response = $this->httpClient->sendRequest($request);
+        try {
+            $response = $this->httpClient->sendRequest($request);
+        } catch (\Exception $e) {
+            return false;
+        }
 
         parse_str($response->getBody(), $tokenInfo);
         if (!is_array($tokenInfo) || !isset($tokenInfo['access_token'])) {
@@ -82,7 +94,11 @@ class SNS
             'GET',
             $this->buildQuery(QQ::getUserInfoUri(), QQ::getUserInfoParams($appId, $accessToken, $openId))
         );
-        $response = $this->httpClient->sendRequest($request);
+        try {
+            $response = $this->httpClient->sendRequest($request);
+        } catch (\Exception $e) {
+            return false;
+        }
 
         $userInfo = json_decode($response->getBody(), true);
         if (!is_array($userInfo)
@@ -101,7 +117,11 @@ class SNS
             'GET',
             $this->buildQuery(QQ::getOpenIdUri(), QQ::getOpenIdParams($accessToken))
         );
-        $response = $this->httpClient->sendRequest($request);
+        try {
+            $response = $this->httpClient->sendRequest($request);
+        } catch (\Exception $e) {
+            return false;
+        }
 
         if (($position = strpos($response->getBody(), 'callback(')) !== 0) {
             return false;
@@ -123,7 +143,11 @@ class SNS
             [],
             http_build_query(Weibo::getAccessTokenParams($clientId, $clientSecret, $code, $redirectUrl))
         );
-        $response = $this->httpClient->sendRequest($request);
+        try {
+            $response = $this->httpClient->sendRequest($request);
+        } catch (\Exception $e) {
+            return false;
+        }
 
         $tokenInfo = json_decode($response->getBody(), true);
         if (!is_array($tokenInfo) || isset($tokenInfo['err_code']) || !isset($tokenInfo['access_token'])) {
@@ -143,7 +167,11 @@ class SNS
             'GET',
             $this->buildQuery(Weibo::getUserInfoUri(), Weibo::getUserInfoParams($accessToken, $uid))
         );
-        $response = $this->httpClient->sendRequest($request);
+        try {
+            $response = $this->httpClient->sendRequest($request);
+        } catch (\Exception $e) {
+            return false;
+        }
 
         $weiboUserInfo = json_decode($response->getBody(), true);
         if (!is_array($weiboUserInfo) || !isset($weiboUserInfo['id']) || !isset($weiboUserInfo['screen_name']) || !isset($weiboUserInfo['profile_image_url'])) {
@@ -159,7 +187,11 @@ class SNS
             'GET',
             $this->buildQuery(Weibo::getUidUri(), Weibo::getUidParams($accessToken))
         );
-        $response = $this->httpClient->sendRequest($request);
+        try {
+            $response = $this->httpClient->sendRequest($request);
+        } catch (\Exception $e) {
+            return false;
+        }
 
         $result = json_decode($response->getBody(), true);
         if (!is_array($result) || !isset($result['uid'])) {
