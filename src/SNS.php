@@ -210,4 +210,17 @@ class SNS
 
         return $query;
     }
+
+    public function getUserInfoFromFacebook($appId, $appSecret, $accessToken)
+    {
+        $fb = new Facebook\Facebook(['app_id' => $appId, 'app_secret' => $appSecret]);
+
+        try {
+            $response = $fb->get('/me?fields=id,name,picture,gender', $accessToken);
+        } catch(\Exception $e) {
+            return false;
+        }
+
+        return $response->getGraphUser();
+    }
 }
