@@ -3,6 +3,7 @@ namespace SNS;
 
 use Http\Client\HttpClient;
 use Http\Message\MessageFactory;
+use Facebook\Facebook;
 use SNS\Open\QQ;
 use SNS\Open\Weibo;
 use SNS\Open\Weixin;
@@ -213,7 +214,7 @@ class SNS
 
     public function getUserInfoFromFacebook($appId, $appSecret, $accessToken)
     {
-        $fb = new Facebook\Facebook(['app_id' => $appId, 'app_secret' => $appSecret]);
+        $fb = new Facebook(['app_id' => $appId, 'app_secret' => $appSecret]);
 
         try {
             $response = $fb->get('/me?fields=id,name,picture,gender', $accessToken);
