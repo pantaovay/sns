@@ -4,7 +4,7 @@ namespace SNS;
 use Http\Client\HttpClient;
 use Http\Message\MessageFactory;
 use Facebook\Facebook;
-use SNS\Open\Ali;
+use SNS\Open\Alipay;
 use SNS\Open\QQ;
 use SNS\Open\Weibo;
 use SNS\Open\Weixin;
@@ -203,12 +203,11 @@ class SNS
         return $result['uid'];
     }
 
-    public function getUserInfoFromAli($appId, $accessToken, $rsaPrivateKey)
+    public function getUserInfoFromAlipay($appId, $accessToken, $rsaPrivateKey, $signType = 'RSA')
     {
-        // 这里请求参数的空格会被转码 可能有问题
         $request = $this->messageFactory->createRequest(
             'GET',
-            $this->buildQuery(Ali::ALI_URI, Ali::getUserInfoParams($appId, $accessToken, $rsaPrivateKey))
+            $this->buildQuery(Alipay::ALIPAY_URI, Alipay::getUserInfoParams($appId, $accessToken, $rsaPrivateKey, $signType))
         );
 
         try {
