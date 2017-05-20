@@ -3,7 +3,7 @@ namespace SNS;
 
 use Http\Client\HttpClient;
 use Http\Message\MessageFactory;
-use Facebook\Facebook;
+use SNS\Open\Ali;
 use SNS\Open\QQ;
 use SNS\Open\Weibo;
 use SNS\Open\Weixin;
@@ -202,6 +202,28 @@ class SNS
         return $result['uid'];
     }
 
+    public function getUserInfoFromAli($appId, $accessToken, $rsaPrivateKey)
+    {
+        // 这里请求参数的空格会被转码 可能有问题
+        $request = $this->messageFactory->createRequest(
+            'GET',
+            $this->buildQuery(Ali::ALI_URI, Ali::getUserInfoParams($appId, $accessToken, $rsaPrivateKey))
+        );
+
+        try {
+            $response = $this->httpClient->sendRequest($request);
+        } catch (\Exception $e) {
+            return false;
+        }
+
+        $userInfo = json_decode($response->getBody(), true);
+        if (!is_array($userInfo) || empty($userInfo['alipay_user_userinfo_share_response']['user_id'])) {
+            return false;
+        }
+
+        return $userInfo['alipay_user_userinfo_share_response'];
+    }
+
     private function buildQuery($uri, array $params = [])
     {
         $query = $uri;
@@ -210,18 +232,5 @@ class SNS
         }
 
         return $query;
-    }
-
-    public function getUserInfoFromFacebook($appId, $appSecret, $accessToken)
-    {
-        $fb = new Facebook(['app_id' => $appId, 'app_secret' => $appSecret]);
-
-        try {
-            $response = $fb->get('/me?fields=id,name,picture,gender', $accessToken);
-        } catch(\Exception $e) {
-            return false;
-        }
-
-        return $response->getGraphUser();
     }
 }
