@@ -5,12 +5,31 @@ class Alipay
 {
     const ALIPAY_URI = 'https://openapi.alipay.com/gateway.do';
 
+    public static function getAccessTokenParams($appId, $code, $rsaPrivateKey, $signType)
+    {
+        $paramsArray = [
+            'app_id' => $appId,
+            'method' => 'alipay.system.oauth.token',
+            'format' => 'json',
+            'charset' => 'UTF-8',
+            'sign_type' => $signType,
+            'timestamp' => date('Y-m-d H:i:s'),
+            'version' => '1.0',
+            'grant_type' => 'authorization_code',
+            'code' => $code,
+        ];
+
+        $paramsArray['sign'] = self::getSign($paramsArray, $rsaPrivateKey, $signType);
+
+        return $paramsArray;
+    }
+
     public static function getUserInfoParams($appId, $accessToken, $rsaPrivateKey, $signType)
     {
         $paramsArray = [
             'app_id' => $appId,
-            'format' => 'json',
             'method' => 'alipay.user.userinfo.share',
+            'format' => 'json',
             'charset' => 'UTF-8',
             'sign_type' => $signType,
             'timestamp' => date('Y-m-d H:i:s'),

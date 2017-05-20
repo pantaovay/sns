@@ -203,6 +203,27 @@ class SNS
         return $result['uid'];
     }
 
+    public function getAccessTokenFromAlipay($appId, $code, $rsaPrivateKey, $signType = 'RSA')
+    {
+        $request = $this->messageFactory->createRequest(
+            'GET',
+            $this->buildQuery(Alipay::ALIPAY_URI, Alipay::getAccessTokenParams($appId, $code, $rsaPrivateKey, $signType))
+        );
+
+        try {
+            $response = $this->httpClient->sendRequest($request);
+        } catch (\Exception $e) {
+            return false;
+        }
+
+        $userInfo = json_decode($response->getBody(), true);
+        if (!is_array($userInfo) || empty($userInfo['alipay_system_oauth_token_response']['user_id'])) {
+            return false;
+        }
+
+        return $userInfo['alipay_system_oauth_token_response']['access_token'];
+    }
+
     public function getUserInfoFromAlipay($appId, $accessToken, $rsaPrivateKey, $signType = 'RSA')
     {
         $request = $this->messageFactory->createRequest(
