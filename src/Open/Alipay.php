@@ -42,13 +42,13 @@ class Alipay
         return $paramsArray;
     }
 
-    private static function getSign(array $data, $rsaPrivateKey, $signType) : string
+    public static function getSign(array $data, $rsaPrivateKey, $signType) : string
     {
         ksort($data);
 
         $dataString = '';
         foreach ($data as $key => $value) {
-            $dataString = $key . '=' . $value . '&';
+            $dataString .= $key . '=' . $value . '&';
         }
 
         $dataString = substr($dataString, 0, -1);
