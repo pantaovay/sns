@@ -7,11 +7,10 @@ use Facebook\Facebook;
 use SNS\Open\QQ;
 use SNS\Open\Weibo;
 use SNS\Open\Weixin;
+use Google_Client;
 
 class SNS
 {
-    const GOOGLE_USER_INFO_URI = 'https://www.googleapis.com/oauth2/v3/tokeninfo';
-
     /**
      * @var HttpClient
      */
@@ -204,22 +203,11 @@ class SNS
         return $result['uid'];
     }
 
-    public function getUserInfoFromGoogle($idToken)
+    public function getUserInfoFromGoogle($clientId, $idToken)
     {
-        $request = $this->messageFactory->createRequest(
-            'GET',
-            $this->buildQuery(self::GOOGLE_USER_INFO_URI, ['id_token' => $idToken])
-        );
-
-        try {
-            $response = $this->httpClient->sendRequest($request);
-        } catch (\Exception $e) {
-            return false;
-        }
-
-        $result = json_decode($response->getBody(), true);
-        if (is_array($result) && isset($result['name']) && isset($result['email'])) {
-            return $result;
+        $client = new Google_Client(['client_id' => $clientId]);
+        if ($payload = $client->verifyIdToken($idToken)) {
+            return $payload;
         }
 
         return false;
