@@ -218,8 +218,11 @@ class SNS
         }
 
         $result = json_decode($response->getBody(), true);
+        if (is_array($result) && isset($result['name']) && isset($result['email'])) {
+            return $result;
+        }
 
-        return is_array($result) ? $result : false;
+        return false;
     }
 
     private function buildQuery($uri, array $params = [])
