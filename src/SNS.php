@@ -10,7 +10,7 @@ use SNS\Open\Weixin;
 
 class SNS
 {
-    const GOOGLE_USER_INFO_URI = 'https://www.googleapis.com/userinfo/v2/me';
+    const GOOGLE_USER_INFO_URI = 'https://www.googleapis.com/oauth2/v3/tokeninfo';
 
     /**
      * @var HttpClient
@@ -204,11 +204,11 @@ class SNS
         return $result['uid'];
     }
 
-    public function getUserInfoFromGoogle($accessToken)
+    public function getUserInfoFromGoogle($idToken)
     {
         $request = $this->messageFactory->createRequest(
             'GET',
-            $this->buildQuery(self::GOOGLE_USER_INFO_URI, ['access_token' => $accessToken])
+            $this->buildQuery(self::GOOGLE_USER_INFO_URI, ['id_token' => $idToken])
         );
 
         try {
