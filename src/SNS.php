@@ -8,6 +8,7 @@ use SNS\Open\Alipay;
 use SNS\Open\QQ;
 use SNS\Open\Weibo;
 use SNS\Open\Weixin;
+use Google_Client;
 
 class SNS
 {
@@ -260,11 +261,23 @@ class SNS
         $fb = new Facebook(['app_id' => $appId, 'app_secret' => $appSecret]);
 
         try {
-            $response = $fb->get('/me?fields=id,name,picture,gender', $accessToken);
+            $response = $fb->get('/me?fields=id,name,picture.type(large),gender', $accessToken);
         } catch(\Exception $e) {
             return false;
         }
 
         return $response->getGraphUser();
+    }
+
+    public function getUserInfoFromGoogle($clientId, $idToken)
+    {
+        $client = new Google_Client(['client_id' => $clientId]);
+        if ($payload = $client->verifyIdToken($idToken)) {
+            if (isset($payload['sub'])) {
+                return $payload;
+            }
+        }
+
+        return false;
     }
 }
