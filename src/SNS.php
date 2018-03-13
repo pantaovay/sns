@@ -273,7 +273,9 @@ class SNS
     {
         $client = new Google_Client(['client_id' => $clientId]);
         if ($payload = $client->verifyIdToken($idToken)) {
-            return $payload;
+            if (isset($payload['sub'])) {
+                return $payload;
+            }
         }
 
         return false;
