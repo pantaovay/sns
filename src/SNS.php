@@ -4,6 +4,7 @@ namespace SNS;
 use Http\Client\HttpClient;
 use Http\Message\MessageFactory;
 use Facebook\Facebook;
+use SNS\Open\Alipay;
 use SNS\Open\QQ;
 use SNS\Open\Weibo;
 use SNS\Open\Weixin;
@@ -203,14 +204,46 @@ class SNS
         return $result['uid'];
     }
 
-    public function getUserInfoFromGoogle($clientId, $idToken)
+    public function getAccessTokenFromAlipay($appId, $code, $rsaPrivateKey, $signType = 'RSA')
     {
-        $client = new Google_Client(['client_id' => $clientId]);
-        if ($payload = $client->verifyIdToken($idToken)) {
-            return $payload;
+        $request = $this->messageFactory->createRequest(
+            'GET',
+            $this->buildQuery(Alipay::ALIPAY_URI, Alipay::getAccessTokenParams($appId, $code, $rsaPrivateKey, $signType))
+        );
+
+        try {
+            $response = $this->httpClient->sendRequest($request);
+        } catch (\Exception $e) {
+            return false;
         }
 
-        return false;
+        $userInfo = json_decode($response->getBody(), true);
+        if (!is_array($userInfo) || empty($userInfo['alipay_system_oauth_token_response']['user_id'])) {
+            return false;
+        }
+
+        return $userInfo['alipay_system_oauth_token_response']['access_token'];
+    }
+
+    public function getUserInfoFromAlipay($appId, $accessToken, $rsaPrivateKey, $signType = 'RSA')
+    {
+        $request = $this->messageFactory->createRequest(
+            'GET',
+            $this->buildQuery(Alipay::ALIPAY_URI, Alipay::getUserInfoParams($appId, $accessToken, $rsaPrivateKey, $signType))
+        );
+
+        try {
+            $response = $this->httpClient->sendRequest($request);
+        } catch (\Exception $e) {
+            return false;
+        }
+
+        $userInfo = json_decode($response->getBody(), true);
+        if (!is_array($userInfo) || empty($userInfo['alipay_user_userinfo_share_response']['user_id'])) {
+            return false;
+        }
+
+        return $userInfo['alipay_user_userinfo_share_response'];
     }
 
     private function buildQuery($uri, array $params = [])
@@ -234,5 +267,15 @@ class SNS
         }
 
         return $response->getGraphUser();
+    }
+
+    public function getUserInfoFromGoogle($clientId, $idToken)
+    {
+        $client = new Google_Client(['client_id' => $clientId]);
+        if ($payload = $client->verifyIdToken($idToken)) {
+            return $payload;
+        }
+
+        return false;
     }
 }

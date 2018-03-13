@@ -4,7 +4,7 @@ namespace SNS\Open;
 class QQ
 {
     const BASE_URI = 'https://graph.qq.com';
-    const USER_INFO_URI = '/user/get_simple_userinfo';
+    const USER_INFO_URI = '/user/get_user_info';
 
     const GET_CODE_URI = 'https://graph.qq.com/oauth2.0/authorize';
     const GET_ACCESS_TOKEN_URI = 'https://graph.qq.com/oauth2.0/token';

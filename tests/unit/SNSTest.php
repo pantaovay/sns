@@ -205,7 +205,7 @@ class SNSTest extends \Codeception\Test\Unit
         $this->tester->assertEquals('GET', $request->getMethod());
         $this->tester->assertEquals('https', $request->getUri()->getScheme());
         $this->tester->assertEquals('graph.qq.com', $request->getUri()->getHost());
-        $this->tester->assertEquals('/user/get_simple_userinfo', $request->getUri()->getPath());
+        $this->tester->assertEquals('/user/get_user_info', $request->getUri()->getPath());
         $this->tester->assertEquals('access_token=ACCESS_TOKEN&oauth_consumer_key=APP_ID&openid=OPENID', $request->getUri()->getQuery());
 
         $this->tester->assertEquals(false, $sns->getUserInfoFromQQ('APP_ID', 'ACCESS_TOKEN', 'OPENID'));
