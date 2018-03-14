@@ -266,7 +266,7 @@ class SNS
             return false;
         }
 
-        return $response->getGraphUser();
+        return $response->getGraphUser()->asArray();
     }
 
     public function getUserInfoFromGoogle($clientId, $idToken)
