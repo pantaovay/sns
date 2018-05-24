@@ -261,7 +261,7 @@ class SNS
         $fb = new Facebook(['app_id' => $appId, 'app_secret' => $appSecret]);
 
         try {
-            $response = $fb->get('/me?fields=id,name,picture.type(large),gender', $accessToken);
+            $response = $fb->get('/me?fields=id,name,picture.type(large)', $accessToken);
         } catch(\Exception $e) {
             return false;
         }
