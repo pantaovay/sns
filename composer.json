@@ -19,7 +19,7 @@
     "php-http/httplug": "^1.0",
     "php-http/message-factory": "^1.0",
     "facebook/graph-sdk" : "~5.0",
-    "google/apiclient" : "^2.2"
+    "google/apiclient" : "^2.10"
   },
   "require-dev": {
     "php-http/mock-client": "^0.3",
